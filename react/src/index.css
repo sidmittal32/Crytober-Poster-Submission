@@ -127,10 +127,16 @@ input[type=file]::file-selector-button:hover {
     background-color: #097969;
     text-align: center;
     color: #fff;
-    height: 80px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 80px;
+}
+
+.footer a {
+    color: #b9cfc8;
+    text-decoration: underline;
 }
 
 @tailwind base;
