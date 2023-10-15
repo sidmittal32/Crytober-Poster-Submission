@@ -83,4 +83,6 @@ app.delete("/api/posts/:id", async (req, res) => {
   res.send(post)
 })
 
-app.listen(8080, () => console.log("listening on port 8080"))
+const port = process.env.PORT || 8000;
+
+app.listen(port, () => console.log("listening on port $(port)"))
