@@ -21,14 +21,16 @@ export default function NewPost() {
     formData.append('teamLeaderPhone', teamLeaderPhone);
     formData.append('image', file);
 
+    try {
+      await axios.post('/api/posts', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-    await axios.post('/api/posts', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+      navigate('/submitsuccess');
 
-    navigate('/');
-
-    window.location.reload();
+    } catch (error) {
+      console.error('Error submitting the form', error);
+    }
   };
 
   const fileSelected = (event) => {
@@ -93,7 +95,7 @@ export default function NewPost() {
               required
             />
           </div>
-          <input onChange={fileSelected} type="file" accept="image/*" required/>
+          <input onChange={fileSelected} type="file" accept="image/*" required />
           <div className="centered-btn">
             <button type="submit" className="btn-primary">
               Submit
