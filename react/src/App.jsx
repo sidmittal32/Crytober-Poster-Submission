@@ -21,7 +21,7 @@ export default function NewPost() {
     formData.append('teamLeaderPhone', teamLeaderPhone);
     formData.append('image', file);
 
-    
+
     await axios.post('/api/posts', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -32,8 +32,17 @@ export default function NewPost() {
   };
 
   const fileSelected = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile) {
+      const maxSize = 10 * 1024 * 1024;
+      if (selectedFile.size <= maxSize) {
+        setFile(selectedFile);
+      } else {
+        alert('Selected file is too large. Please choose a file smaller than 10 MB.');
+        event.target.value = null;
+      }
+    }
   };
 
   return (
@@ -51,6 +60,7 @@ export default function NewPost() {
               type="text"
               placeholder="Team Name"
               className="form-control"
+              required
             />
           </div>
           <div className="form-group">
@@ -60,6 +70,7 @@ export default function NewPost() {
               type="text"
               placeholder="Team Leader Name"
               className="form-control"
+              required
             />
           </div>
           <div className="form-group">
@@ -69,6 +80,7 @@ export default function NewPost() {
               type="email"
               placeholder="Team Leader Email"
               className="form-control"
+              required
             />
           </div>
           <div className="form-group">
@@ -78,9 +90,10 @@ export default function NewPost() {
               type="tel"
               placeholder="Team Leader Phone Number"
               className="form-control"
+              required
             />
           </div>
-          <input onChange={fileSelected} type="file" accept="image/*" />
+          <input onChange={fileSelected} type="file" accept="image/*" required/>
           <div className="centered-btn">
             <button type="submit" className="btn-primary">
               Submit
