@@ -11,8 +11,19 @@ export default function NewPost() {
 
   const navigate = useNavigate();
 
-  const submit = async (event) => {
-    event.preventDefault();
+  const validateAndSubmit = async () => {
+    if (
+      teamName.length < 3 ||
+      !/^[a-zA-Z]+$/.test(teamName) ||
+      teamLeaderName.length < 3 ||
+      !/^[a-zA-Z]+$/.test(teamLeaderName) ||
+      !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(teamLeaderEmail) ||
+      !/^\d{10}$/.test(teamLeaderPhone) ||
+      !file.type.startsWith('image/')
+    ) {
+      alert('Invalid input. Please check your entries.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('teamName', teamName);
@@ -27,7 +38,6 @@ export default function NewPost() {
       });
 
       navigate('/submitsuccess');
-
     } catch (error) {
       console.error('Error submitting the form', error);
     }
@@ -37,7 +47,7 @@ export default function NewPost() {
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
-      const maxSize = 10 * 1024 * 1024;
+      const maxSize = 10 * 1024 * 1024; // 10MB
       if (selectedFile.size <= maxSize) {
         setFile(selectedFile);
       } else {
@@ -51,7 +61,7 @@ export default function NewPost() {
     <div className="register-photo">
       <div className="form-container">
         <div className="image-holder"></div>
-        <form onSubmit={submit}>
+        <form>
           <h2 className="text-center">
             <strong>Submit</strong> your poster.
           </h2>
@@ -95,9 +105,18 @@ export default function NewPost() {
               required
             />
           </div>
-          <input onChange={fileSelected} type="file" accept="image/*" required />
+          <input
+            onChange={fileSelected}
+            type="file"
+            accept="image/*"
+            required
+          />
           <div className="centered-btn">
-            <button type="submit" className="btn-primary">
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={validateAndSubmit}
+            >
               Submit
             </button>
           </div>
