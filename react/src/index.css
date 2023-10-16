@@ -15,11 +15,18 @@ body {
         display: none !important;
     }
 
-    .register-photo .form-container,
-    .register-photo form {
+    .register-photo .form-container {
         width: 100%;
-        display: block;
         padding: 20px;
+    }
+
+    .register-photo form {
+        padding: 20px;
+    }
+
+    .register-photo form h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
     }
 }
 
