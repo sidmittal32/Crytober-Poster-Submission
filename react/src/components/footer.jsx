@@ -17,7 +17,7 @@ function Footer() {
               Cryptonite 2023
             </div>
             <div>
-              MAHE-ISAC COE
+              &nbsp;MAHE-ISAC COE for Cyber Security&nbsp;
             </div>
             <div>
               Developed by <a href="https://www.linkedin.com/in/siddharth-mittal-/">Siddharth Mittal</a>

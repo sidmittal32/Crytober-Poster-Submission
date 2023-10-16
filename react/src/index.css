@@ -14,6 +14,13 @@ body {
     .register-photo .image-holder {
         display: none !important;
     }
+
+    .register-photo .form-container,
+    .register-photo form {
+        width: 100%;
+        display: block;
+        padding: 20px;
+    }
 }
 
 .register-photo .image-holder {
@@ -30,7 +37,7 @@ body {
 .register-photo .form-container {
     display: table;
     max-width: 900px;
-    width: 100%;
+    width: 60%;
     margin: 0 auto;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
     flex: 1;
@@ -38,9 +45,9 @@ body {
 
 .register-photo form {
     display: table-cell;
-    width: 40%;
+    width: 100%;
     background-color: #ffffff;
-    padding: 40px 20px;
+    padding: 20px;
     color: #505e6c;
 }
 
@@ -110,7 +117,6 @@ body {
 input[type=file]::file-selector-button {
     margin-top: 10px;
     margin-right: 15px;
-    margin-left: 40px;
     border: none;
     border-bottom-width: 0px;
     background: #5a5a5a;
@@ -123,6 +129,10 @@ input[type=file]::file-selector-button {
 
 input[type=file]::file-selector-button:hover {
     background: #808080;
+}
+
+input[type=file] {
+    margin-left: 40px;
 }
 
 .centered-btn {
