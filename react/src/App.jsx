@@ -8,6 +8,7 @@ export default function NewPost() {
   const [teamLeaderEmail, setTeamLeaderEmail] = useState('');
   const [teamLeaderPhone, setTeamLeaderPhone] = useState('');
   const [file, setFile] = useState('');
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
   const navigate = useNavigate();
 
@@ -37,7 +38,7 @@ export default function NewPost() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      navigate('/submitsuccess');
+      setSubmissionSuccess(true);
     } catch (error) {
       console.error('Error submitting the form', error);
     }
@@ -47,7 +48,7 @@ export default function NewPost() {
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
-      const maxSize = 10 * 1024 * 1024; // 10MB
+      const maxSize = 10 * 1024 * 1024;
       if (selectedFile.size <= maxSize) {
         setFile(selectedFile);
       } else {
@@ -65,61 +66,69 @@ export default function NewPost() {
           <h2 className="text-center">
             <strong>Submit</strong> your poster.
           </h2>
-          <div className="form-group">
-            <input
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-              type="text"
-              placeholder="Team Name"
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              value={teamLeaderName}
-              onChange={(e) => setTeamLeaderName(e.target.value)}
-              type="text"
-              placeholder="Team Leader Name"
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              value={teamLeaderEmail}
-              onChange={(e) => setTeamLeaderEmail(e.target.value)}
-              type="email"
-              placeholder="Team Leader Email"
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              value={teamLeaderPhone}
-              onChange={(e) => setTeamLeaderPhone(e.target.value)}
-              type="tel"
-              placeholder="Team Leader Phone Number"
-              className="form-control"
-              required
-            />
-          </div>
-          <input
-            onChange={fileSelected}
-            type="file"
-            accept="image/*"
-            required
-          />
-          <div className="centered-btn">
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={validateAndSubmit}
-            >
-              Submit
-            </button>
-          </div>
+          {submissionSuccess ? (
+            <div className="submission-success">
+              Your Submission was Successful.
+            </div>
+          ) : (
+            <div>
+              <div className="form-group">
+                <input
+                  value={teamName}
+                  onChange={(e) => setTeamName(e.target.value)}
+                  type="text"
+                  placeholder="Team Name"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  value={teamLeaderName}
+                  onChange={(e) => setTeamLeaderName(e.target.value)}
+                  type="text"
+                  placeholder="Team Leader Name"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  value={teamLeaderEmail}
+                  onChange={(e) => setTeamLeaderEmail(e.target.value)}
+                  type="email"
+                  placeholder="Team Leader Email"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  value={teamLeaderPhone}
+                  onChange={(e) => setTeamLeaderPhone(e.target.value)}
+                  type="tel"
+                  placeholder="Team Leader Phone Number"
+                  className="form-control"
+                  required
+                />
+              </div>
+              <input
+                onChange={fileSelected}
+                type="file"
+                accept="image/*"
+                required
+              />
+              <div className="centered-btn">
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={validateAndSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
