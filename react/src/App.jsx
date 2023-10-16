@@ -14,12 +14,12 @@ export default function NewPost() {
   const validateAndSubmit = async () => {
     const errors = [];
 
-    if (teamName.length < 3 || !/^[a-zA-Z]+$/.test(teamName)) {
-      errors.push('Team Name should be at least 3 characters long and contain only letters.');
+    if (teamName.length < 3 || !/^[a-zA-Z\s]{3,}$/.test(teamName)) {
+      errors.push('Team Name should be at least 3 characters long and can contain only letters and spaces.');
     }
 
-    if (teamLeaderName.length < 3 || !/^[a-zA-Z]+$/.test(teamLeaderName)) {
-      errors.push('Team Leader Name should be at least 3 characters long and contain only letters.');
+    if (teamLeaderName.length < 3 || !/^[a-zA-Z\s]{3,}$/.test(teamLeaderName)) {
+      errors.push('Team Leader Name should be at least 3 characters long and can contain only letters and spaces.');
     }
 
     if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(teamLeaderEmail)) {
