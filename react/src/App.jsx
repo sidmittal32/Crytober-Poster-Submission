@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export default function NewPost() {
   const [teamName, setTeamName] = useState('');
@@ -8,8 +7,16 @@ export default function NewPost() {
   const [teamLeaderEmail, setTeamLeaderEmail] = useState('');
   const [teamLeaderPhone, setTeamLeaderPhone] = useState('');
   const [file, setFile] = useState('');
+  const [submissionMessage, setSubmissionMessage] = useState('');
 
-  const navigate = useNavigate();
+  const displaySubmissionMessage = () => {
+    setSubmissionMessage('Your Submission was Successful');
+    setTeamName('');
+    setTeamLeaderName('');
+    setTeamLeaderEmail('');
+    setTeamLeaderPhone('');
+    setFile('');
+  };
 
   const validateAndSubmit = async () => {
     const errors = [];
@@ -55,7 +62,7 @@ export default function NewPost() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      navigate('/submitsuccess');
+      displaySubmissionMessage();
     } catch (error) {
       console.error('Error submitting the form', error);
     }
@@ -138,6 +145,11 @@ export default function NewPost() {
               Submit
             </button>
           </div>
+          {submissionMessage && (
+            <p style={{ textAlign: 'center', color: '#505e6c', fontWeight: 'bold' }}>
+              {submissionMessage}
+            </p>
+          )}
         </form>
       </div>
     </div>
