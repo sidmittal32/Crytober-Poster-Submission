@@ -9,7 +9,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="navbar" style={{ backgroundColor: '#3c7a6a' }}>
+        <div className="navbar" style={{ backgroundColor: '#097969' }}>
             <div className="navbar-left">
                 <a href="/">Home</a>
                 <a href="/rules">Rules</a>
