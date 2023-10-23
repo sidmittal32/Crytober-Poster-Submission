@@ -11,7 +11,7 @@ const app = express();
 const prisma = new PrismaClient();
 
 app.use(bodyParser.json({ limit: '50mb' })); // Set JSON request body limit
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Set URL-encoded request body limit
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000})); // Set URL-encoded request body limit
 app.use(express.json());
 
 const storage = multer.memoryStorage();
