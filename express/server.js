@@ -5,9 +5,14 @@ import crypto from 'crypto';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
 import { uploadFile, deleteFile, getObjectSignedUrl } from './s3.js';
+import bodyParser from 'body-parser'; // Import body-parser
 
 const app = express();
 const prisma = new PrismaClient();
+
+app.use(bodyParser.json({ limit: '50mb' })); // Set JSON request body limit
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // Set URL-encoded request body limit
+app.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({
@@ -31,7 +36,7 @@ app.get('/*', function (req, res) {
 });
 
 app.get('/api/posts', async (req, res) => {
-const posts = await prisma.posts.findMany({ orderBy: [{ created: 'desc' }] });
+  const posts = await prisma.posts.findMany({ orderBy: [{ created: 'desc' }] });
   for (let post of posts) {
     post.imageUrl = await getObjectSignedUrl(post.imageName);
   }
