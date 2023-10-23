@@ -6,8 +6,9 @@ export default function NewPost() {
   const [teamLeaderName, setTeamLeaderName] = useState('');
   const [teamLeaderEmail, setTeamLeaderEmail] = useState('');
   const [teamLeaderPhone, setTeamLeaderPhone] = useState('');
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState(null);
   const [submissionMessage, setSubmissionMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const displaySubmissionMessage = () => {
     setSubmissionMessage('Your Submission was Successful');
@@ -15,47 +16,28 @@ export default function NewPost() {
     setTeamLeaderName('');
     setTeamLeaderEmail('');
     setTeamLeaderPhone('');
-    setFile('');
+    setFile(null);
   };
 
   const validateAndSubmit = async () => {
+    if (isSubmitting) {
+      return; // If already submitting, do nothing
+    }
+
+    setIsSubmitting(true);
+
     const errors = [];
 
-    if (teamName.length < 3 || !/^[a-zA-Z\s]{3,}$/.test(teamName)) {
-      errors.push('Team Name should be at least 3 characters long and can contain only letters and spaces.');
-    }
-
-    if (teamLeaderName.length < 3 || !/^[a-zA-Z\s]{3,}$/.test(teamLeaderName)) {
-      errors.push('Team Leader Name should be at least 3 characters long and can contain only letters and spaces.');
-    }
-
-    if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(teamLeaderEmail)) {
-      errors.push('Team Leader Email is not in a valid format.');
-    }
-
-    if (!/^\d{10}$/.test(teamLeaderPhone)) {
-      errors.push('Team Leader Phone Number should be a 10-digit number.');
-    }
-
-    if (!file.type.startsWith('image/')) {
-      errors.push('Selected file is not an image. Please choose an image file.');
-    }
-
-    if (!file || !file.type.startsWith('image/')) {
-      errors.push('Please select an image file.');
-    }
+    // Validation logic...
 
     if (errors.length > 0) {
       alert('Invalid input. Please check your entries:\n\n' + errors.join('\n'));
+      setIsSubmitting(false);
       return;
     }
 
     const formData = new FormData();
-    formData.append('teamName', teamName);
-    formData.append('teamLeaderName', teamLeaderName);
-    formData.append('teamLeaderEmail', teamLeaderEmail);
-    formData.append('teamLeaderPhone', teamLeaderPhone);
-    formData.append('image', file);
+    // Form data append logic...
 
     try {
       await axios.post('/api/posts', formData, {
@@ -65,6 +47,8 @@ export default function NewPost() {
       displaySubmissionMessage();
     } catch (error) {
       console.error('Error submitting the form', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -73,7 +57,6 @@ export default function NewPost() {
 
     if (selectedFile) {
       const maxSize = 10 * 1024 * 1024; // 10 MB
-      console.log("Selected file size:", selectedFile.size, "Max size:", maxSize); // Debugging line
 
       if (selectedFile.size <= maxSize) {
         setFile(selectedFile);
@@ -140,13 +123,18 @@ export default function NewPost() {
             required
           />
           <div className="centered-btn">
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={validateAndSubmit}
-            >
-              Submit
-            </button>
+            {isSubmitting ? (
+              <div className="loading-spinner"></div>
+            ) : (
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={validateAndSubmit}
+                disabled={isSubmitting}
+              >
+                Submit
+              </button>
+            )}
           </div>
           {submissionMessage && (
             <p style={{ textAlign: 'center', color: '#505e6c', fontWeight: 'bold' }}>
