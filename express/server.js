@@ -13,30 +13,33 @@ const app = express()
 const prisma = new PrismaClient()
 
 const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+})
 
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 
 const _dirname = path.dirname("")
-const buildPath = path.join(_dirname  , "../react/dist");
+const buildPath = path.join(_dirname, "../react/dist");
 
 app.use(express.static(buildPath))
 
-app.get("/*", function(req, res){
+app.get("/*", function (req, res) {
 
-    res.sendFile(
-        path.join(__dirname, "../react/dist/index.html"),
-        function (err) {
-          if (err) {
-            res.status(500).send(err);
-          }
-        }
-      );
+  res.sendFile(
+    path.join(__dirname, "../react/dist/index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
 
 })
 
 app.get("/api/posts", async (req, res) => {
-  const posts = await prisma.posts.findMany({orderBy: [{ created: 'desc'}]})
+  const posts = await prisma.posts.findMany({ orderBy: [{ created: 'desc' }] })
   for (let post of posts) {
     post.imageUrl = await getObjectSignedUrl(post.imageName)
   }
@@ -69,17 +72,17 @@ app.post('/api/posts', upload.single('image'), async (req, res) => {
       teamLeaderPhone,
     }
   })
-  
+
   res.status(201).send(post)
 })
 
 app.delete("/api/posts/:id", async (req, res) => {
   const id = +req.params.id
-  const post = await prisma.posts.findUnique({where: {id}}) 
+  const post = await prisma.posts.findUnique({ where: { id } })
 
   await deleteFile(post.imageName)
 
-  await prisma.posts.delete({where: {id: post.id}})
+  await prisma.posts.delete({ where: { id: post.id } })
   res.send(post)
 })
 
