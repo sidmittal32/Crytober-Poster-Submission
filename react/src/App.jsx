@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import axios from 'axios';
 
 export default function NewPost() {
@@ -6,9 +6,11 @@ export default function NewPost() {
   const [teamLeaderName, setTeamLeaderName] = useState('');
   const [teamLeaderEmail, setTeamLeaderEmail] = useState('');
   const [teamLeaderPhone, setTeamLeaderPhone] = useState('');
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState('');
   const [submissionMessage, setSubmissionMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fileInputRef = useRef(null);
 
   const displaySubmissionMessage = () => {
     setSubmissionMessage('Your Submission was Successful');
@@ -16,28 +18,46 @@ export default function NewPost() {
     setTeamLeaderName('');
     setTeamLeaderEmail('');
     setTeamLeaderPhone('');
-    setFile(null);
+    setFile('');
+    setIsLoading(false);
   };
 
   const validateAndSubmit = async () => {
-    if (isSubmitting) {
-      return; // If already submitting, do nothing
-    }
-
-    setIsSubmitting(true);
-
     const errors = [];
 
-    // Validation logic...
+    if (teamName.length < 3 || !/^[a-zA-Z\s]{3,}$/.test(teamName)) {
+      errors.push('Team Name should be at least 3 characters long and can contain only letters and spaces.');
+    }
+
+    if (teamLeaderName.length < 3 || !/^[a-zA-Z\s]{3,}$/.test(teamLeaderName)) {
+      errors.push('Team Leader Name should be at least 3 characters long and can contain only letters and spaces.');
+    }
+
+    if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(teamLeaderEmail)) {
+      errors.push('Team Leader Email is not in a valid format.');
+    }
+
+    if (!/^\d{10}$/.test(teamLeaderPhone)) {
+      errors.push('Team Leader Phone Number should be a 10-digit number.');
+    }
+
+    if (!file || !file.type.startsWith('image/')) {
+      errors.push('Please select an image file.');
+    }
 
     if (errors.length > 0) {
       alert('Invalid input. Please check your entries:\n\n' + errors.join('\n'));
-      setIsSubmitting(false);
       return;
     }
 
+    setIsLoading(true);
+
     const formData = new FormData();
-    // Form data append logic...
+    formData.append('teamName', teamName);
+    formData.append('teamLeaderName', teamLeaderName);
+    formData.append('teamLeaderEmail', teamLeaderEmail);
+    formData.append('teamLeaderPhone', teamLeaderPhone);
+    formData.append('image', file);
 
     try {
       await axios.post('/api/posts', formData, {
@@ -47,8 +67,7 @@ export default function NewPost() {
       displaySubmissionMessage();
     } catch (error) {
       console.error('Error submitting the form', error);
-    } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
@@ -57,12 +76,13 @@ export default function NewPost() {
 
     if (selectedFile) {
       const maxSize = 10 * 1024 * 1024; // 10 MB
+      console.log("Selected file size:", selectedFile.size, "Max size:", maxSize); // Debugging line
 
       if (selectedFile.size <= maxSize) {
         setFile(selectedFile);
       } else {
         alert('Selected file is too large. Please choose a file smaller than 10 MB.');
-        document.getElementById('fileInput').value = '';
+        fileInputRef.current.value = '';
       }
     }
   };
@@ -116,6 +136,7 @@ export default function NewPost() {
             />
           </div>
           <input
+            ref={fileInputRef}
             onChange={fileSelected}
             type="file"
             accept="image/*"
@@ -123,18 +144,13 @@ export default function NewPost() {
             required
           />
           <div className="centered-btn">
-            {isSubmitting ? (
-              <div className="loading-spinner"></div>
-            ) : (
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={validateAndSubmit}
-                disabled={isSubmitting}
-              >
-                Submit
-              </button>
-            )}
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={isLoading ? null : validateAndSubmit}
+            >
+              {isLoading ? 'Loading...' : 'Submit'}
+            </button>
           </div>
           {submissionMessage && (
             <p style={{ textAlign: 'center', color: '#505e6c', fontWeight: 'bold' }}>
