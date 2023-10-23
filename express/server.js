@@ -54,7 +54,6 @@ app.post('/api/posts', upload.single('image'), async (req, res) => {
   try {
     // Use sharp to resize and optimize the image
     const resizedImageBuffer = await sharp(file.buffer)
-      .resize({ height: 1920, width: 1080, fit: 'contain' })
       .jpeg({ quality: 80, progressive: true }) // Adjust settings as needed
       .toBuffer();
 
