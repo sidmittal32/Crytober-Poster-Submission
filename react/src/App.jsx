@@ -72,12 +72,14 @@ export default function NewPost() {
     const selectedFile = event.target.files[0];
 
     if (selectedFile) {
-      const maxSize = 10 * 1024 * 1024;
+      const maxSize = 10 * 1024 * 1024; // 10 MB
+      console.log("Selected file size:", selectedFile.size, "Max size:", maxSize); // Debugging line
+
       if (selectedFile.size <= maxSize) {
         setFile(selectedFile);
       } else {
         alert('Selected file is too large. Please choose a file smaller than 10 MB.');
-        event.target.value = null;
+        document.getElementById('fileInput').value = '';
       }
     }
   };
@@ -134,6 +136,7 @@ export default function NewPost() {
             onChange={fileSelected}
             type="file"
             accept="image/*"
+            id="fileInput"
             required
           />
           <div className="centered-btn">
