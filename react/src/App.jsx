@@ -148,6 +148,7 @@ export default function NewPost() {
               type="button"
               className="btn-primary"
               onClick={isLoading ? null : validateAndSubmit}
+              disabled={isLoading} // Disable the button when loading
             >
               {isLoading ? 'Loading...' : 'Submit'}
             </button>
