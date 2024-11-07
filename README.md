@@ -63,4 +63,3 @@ Cryptober Poster Submission is a web application designed to streamline the subm
 ## Usage
 1. **Submit a Poster**: Fill out the submission form, attaching your cybersecurity awareness poster.
 2. **Admin Review**: Submitted posters are stored in AWS S3, with entry details stored in a relational database managed by Prisma.
-3. **Moderation**: (If applicable, describe any admin features for reviewing or managing submissions.)
